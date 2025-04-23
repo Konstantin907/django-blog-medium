@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+{% load static tailwind_tags %}
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Welcome, Blogger{% endblock title %}</title>
+  </head>
+  <body>
+    {% load static %}
+    <!DOCTYPE html>
+    <html lang="en">
+      <head>
+        <meta charset="UTF-8" />
+        <title>Sign Up For Blogger!</title>
+        {% tailwind_css %}
+      </head>
+      <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+        <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+          <h2 class="text-2xl font-bold mb-6 text-center">
+            Sign Up For Blogger!
+          </h2>
+
+          {% if messages %} {% for message in messages %}
+          <div class="mb-4 text-red-600 text-sm">{{ message }}</div>
+          {% endfor %} {% endif %}
+
+          <form method="POST" action="{% url 'register' %}">
+            {% csrf_token %}
+            <div class="mb-4">
+              <label class="block text-gray-700">Username</label>
+              <input
+                type="text"
+                name="username"
+                class="w-full p-2 border border-gray-300 rounded"
+                required
+              />
+            </div>
+            <div class="mb-4">
+              <label class="block text-gray-700">Email</label>
+              <input
+                type="email"
+                name="email"
+                class="w-full p-2 border border-gray-300 rounded"
+                required
+              />
+            </div>
+            <div class="mb-6">
+              <label class="block text-gray-700">Password</label>
+              <input
+                type="password"
+                name="password"
+                class="w-full p-2 border border-gray-300 rounded"
+                required
+              />
+            </div>
+            <button
+              type="submit"
+              class="w-full bg-black text-white py-2 rounded hover:bg-gray-800"
+            >
+              Register
+            </button>
+          </form>
+
+          <p class="mt-4 text-center text-sm text-gray-600">
+            Already have an account?
+            <a
+              href="#"
+              id="openModalBtn2"
+              class="text-blue-500 font-bold hover:underline"
+              >Sign In</a
+            >
+          </p>
+        </div>
+
+        <script>
+          document
+            .getElementById("openModalBtn2")
+            .addEventListener("click", function (e) {
+              e.preventDefault();
+              window.location.href = "/#login";
+            });
+        </script>
+      </body>
+    </html>
+  </body>
+</html>

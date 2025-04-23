@@ -1,0 +1,118 @@
+{% extends "stories.html" %}
+{% load static tailwind_tags %}
+{% load static %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto mt-10 px-4">
+
+  <!-- Sekcija: ime i profilna slika -->
+  <div class="flex items-center space-x-6">
+    {% if user_profile.profile_image %}
+      <img
+        src="{{ user_profile.profile_image.url }}"
+        alt="Profilna slika"
+        class="w-24 h-24 rounded-full object-cover"
+      />
+    {% else %}
+      <div class="w-24 h-24 rounded-full bg-gray-300 flex items-center justify-center">
+        <span class="text-sm text-gray-600">No profile Pic</span>
+      </div>
+    {% endif %}
+    <h1 class="text-3xl font-bold">{{ profile_user.username }}</h1>
+  </div> 
+
+  <!-- Forma za upload slike -->
+  {% if request.user.id == profile_user.id %} 
+  <form
+    method="POST"
+    enctype="multipart/form-data"
+    action="{% url 'upload_profile_image' profile_user.id %}"
+    class="mt-6 flex items-center space-x-4"
+  >
+    {% csrf_token %}
+    <input
+      id="profileImage"
+      type="file"
+      name="profile_image"
+      accept="image/*"
+      required
+      class="block w-full text-sm cursor-pointer text-gray-500 file:mr-4 file:py-2 file:px-4 
+       file:rounded-full file:border-0 file:text-sm file:font-semibold
+       file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
+    />
+    <button
+      type="submit"
+      class="px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800"
+    >
+      Save
+    </button>
+  </form>
+  {% endif %}
+
+  <!-- Navigacija -->
+  <div class="flex space-x-8 mt-10 border-b">
+    <a href="{% url 'texts' profile_user.id %}"
+       class="pb-2 {% if active_tab == 'texts' %}border-b-2 border-black text-black font-medium{% else %}text-gray-500{% endif %}">
+      Texts
+    </a>
+    <a href="{% url 'about' profile_user.id %}"
+       class="pb-2 {% if active_tab == 'about' %}border-b-2 border-black text-black font-medium{% else %}text-gray-500{% endif %}">
+      About
+    </a>
+  </div>
+
+  <!-- Texts section -->
+  {% if active_tab == 'texts' %}
+    <div class='mt-10'>
+      <h2 class="text-xl font-bold mb-4">Your Posts:</h2>
+      {% if posts %}
+        {% for post in posts %}
+       <a href="{% url 'post_detail' post.id %}">
+        <div class="mb-6 w-[550px] h-[550px]">
+          <img class='' src="{{ post.image.url }}" alt="{{ post.title }}">
+          <h3 class="mt-6 text-lg font-semibold">{{ post.title }}</h3>
+          <p class="text-gray-700 mt-1">{{ post.body|truncatechars:200| striptags }}</p>
+          <p class="text-sm text-gray-500 mt-1">{{ post.created_at|date:"M d, Y" }}</p>
+        </div>
+      </a>
+        {% endfor %}
+      {% endif %}
+
+    </div>
+  {% endif %}
+  
+
+  <!-- ABOUT section -->
+  {% if active_tab == 'about' %}
+  <div class="mt-10">
+    <h2 class="text-xl font-bold">About me</h2>
+
+    {% if edit_mode and request.user.id == profile_user.id %}
+      <!-- Form for about text edit-->
+      <form method="POST" action="{% url 'about' profile_user.id %}">
+        {% csrf_token %}
+        <textarea name="about" id="id_about" rows="10">{{ user_profile.about|safe }}</textarea>
+        <button type="submit" class="mt-4 bg-black text-white px-4 py-2 rounded">Publish</button>
+      </form>
+
+      <script src="//cdn.ckeditor.com/4.20.2/standard/ckeditor.js"></script>
+      <script>
+        CKEDITOR.replace('id_about');
+      </script>
+
+    {% else %}
+      <!-- Prikaz teksta -->
+      <div class="mt-2 prose max-w-none">
+        {{ user_profile.about|safe }}
+      </div>
+      {% if request.user.id == profile_user.id %}
+        <a href="?edit=1" class="inline-block mt-4 text-sm text-blue-600 underline">
+          <button class="px-4 py-2 bg-black text-white rounded-full hover:bg-gray-800">Edit</button>  
+        </a>
+      {% endif %}
+    {% endif %}
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

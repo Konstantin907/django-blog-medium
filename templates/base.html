@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  {% load static tailwind_tags %} 
+  {% load static %}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Blog Home{% endblock title %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap"
+      rel="stylesheet"
+    />
+    {% tailwind_css %}
+  </head>
+  <body class="bg-[#f7f4ed] text-gray-900 ml-12 mr-12">
+    <header
+      class="flex justify-between items-center px-4 md:px-12 py-4 border-b font-bold"
+    >
+      <div class="text-6xl font-bold">Blog</div>
+      <nav class="hidden items-center md:flex space-x-6 text-md font-medium">
+        <a href="#">Our story</a>
+        <a href="#">Membership</a>
+        <a href="#">Write</a>
+        <a href="#">Sign in</a>
+
+        <a
+          href="#"
+          id="openModalBtn"
+          class="bg-black text-white px-4 py-2 rounded-full hover:bg-slate-800"
+          >Get started</a
+        >
+      </nav>
+      <div class="md:hidden">
+        <button>☰</button>
+      </div>
+    </header>
+
+    <main
+      class="flex flex-col md:flex-row items-center justify-between px-4 md:px-12 py-16 md:py-24"
+    >
+      <div class="text-center md:text-left md:max-w-xl">
+        <h1 class="text-[90px] font-bold font-nunito leading-tight mb-6">
+          Human<br />stories & ideas
+        </h1>
+        <p class="text-2xl mb-6 text-gray-700 underline decoration-sky-500">
+          A place to read, write, and deepen your understanding.
+        </p>
+        <a
+          href="#"
+          class="inline-block bg-black text-white px-6 py-3 rounded-full font-medium text-lg hover:bg-slate-800"
+        >
+          Start reading
+        </a>
+      </div>
+
+      <!-- Right side illustration-->
+      <div class="mt-12 md:mt-0 md:ml-12">
+        <div class="w-[250px] sm:w-[300px] md:w-[400px]">
+          <img
+            src="{% static 'images/undraw_online-posts_avfn.svg' %}"
+            alt="Illustration"
+            class="rounded-lg w-[550px] h-[400px]"
+          />
+        </div>
+      </div>
+    </main>
+
+    <!-- Modal -->
+    <div
+      id="modal"
+      class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50"
+    >
+    <div class="bg-white rounded-lg p-8 w-full max-w-md relative shadow-xl">
+      <!-- Close btn -->
+      <button
+        id="closeModalBtn"
+        class="absolute top-2 right-2 text-gray-500 hover:text-black text-xl"
+      >
+        &times;
+      </button>
+    
+      <!-- TABS -->
+      <div class="flex justify-center mb-6">
+        <button id="showLogin" class="mr-4 text-gray-700 font-semibold hover:text-black">Sign In</button>
+      </div>
+    
+      <!-- Login form -->
+      <form id="loginForm" method="POST" action="{% url 'login' %}">
+        {% csrf_token %}
+        <h2 class="text-2xl font-bold mb-4 text-center">Sign In</h2>
+        <div class="mb-4">
+          <label class="block text-gray-700">Username</label>
+          <input
+            type="text"
+            name="username"
+            class="w-full border border-gray-300 p-2 rounded"
+            required
+          />
+        </div>
+        <div class="mb-4">
+          <label class="block text-gray-700">Password</label>
+          <input
+            type="password"
+            name="password"
+            class="w-full border border-gray-300 p-2 rounded"
+            required
+          />
+        </div>
+        <button
+          type="submit"
+          class="bg-black text-white px-4 py-2 rounded-full w-full hover:bg-slate-800"
+        >
+          Sign In
+        </button>
+
+        <div class="mt-6 text-center text-sm">
+          You are new?
+          <a href="{% url 'register' %}" class="text-blue-500 hover:underline font-semibold">Register</a>
+        </div>
+      </form>
+    </div>
+    
+    </div>
+
+    {% block content %} 
+    {% endblock content %}
+
+    <footer
+      class="text-center text-sm text-gray-500 py-6 border-t px-4 flex justify-center gap-10"
+    >
+      Help • Status • About • Careers • Blog • Privacy • Terms • Text to speech
+      • Teams
+    </footer>
+
+    <script src="{% static '/main.js' %}"></script>
+  </body>
+</html>

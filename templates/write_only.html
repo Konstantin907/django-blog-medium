@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{% load static tailwind_tags %} {% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Write A Post</title>
+    {% tailwind_css %}
+    {{ form.media }}
+</head>
+<body class="bg-gray-50 p-8">
+    <div class="max-w-3xl mx-auto bg-white p-6 rounded-xl shadow">
+        <h1 class="text-2xl font-bold mb-6">Write a New Post</h1>
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+          {% csrf_token %}
+          
+          <div>
+            <label class="block font-medium">Title</label>
+            {{ form.title }}
+          </div>
+
+          <div>
+            <label class="block font-medium">Category</label>
+            {{ form.category }}
+          </div>
+    
+          <div>
+            <label class="block font-medium">Short Description</label>
+            {{ form.description }}
+          </div>
+    
+          <div>
+            <label class="block font-medium">Banner Image</label>
+            {{ form.image }}
+          </div>
+    
+          <div>
+            <label class="block font-medium">Body</label>
+            {{ form.body }}
+          </div>
+    
+          <button type="submit" class="bg-black text-white px-6 py-2 rounded hover:bg-gray-800 transition">
+            Publish
+          </button>
+        </form>
+      </div>
+        
+</body>
+</html>

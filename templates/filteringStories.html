@@ -1,0 +1,126 @@
+{% extends "stories.html" %} {% load static %}
+{% block content %}
+
+<div class="flex justify-center gap-12 px-8">
+  <div class="flex flex-col w-full max-w-3xl">
+    {% comment %} filter {% endcomment %}
+    <div class="py-6 flex space-x-6 border-b border-gray-200">
+    
+      <a href="?category=ai" class="tab-item pb-2 text-gray-600 hover:text-black {% if active_category == 'ai' %}active-tab{% endif %}">Artificial Intelligence</a>
+      <a href="?category=featured" class="tab-item pb-2 text-gray-600 hover:text-black {% if active_category == 'featured' %}active-tab{% endif %}">
+        Featured
+      </a>
+      <a href="?category=web" class="tab-item pb-2 text-gray-600 hover:text-black {% if active_category == 'web' %}active-tab{% endif %}">
+        Web Development
+      </a>
+      <a href="?category=coding" class="tab-item pb-2 text-gray-600 hover:text-black {% if active_category == 'coding' %}active-tab{% endif %}">
+        Coding
+      </a>
+      <a href="?category=tech" class="tab-item pb-2 text-gray-600 hover:text-black {% if active_category == 'tech' %}active-tab{% endif %}">
+        Technology
+      </a>
+    </div>
+
+    {% comment %} cards, stories {% endcomment %}
+    <div class="flex justify-between gap-44 py-12">
+        <div class="flex flex-col gap-44 py-12 mt-10">
+            {% for post in page_obj %}
+            <a href="{% url 'post_detail' post.id %}">
+              <div class="relative group w-fit mt-10">
+                <span class="text-sm text-gray-600 hover:underline cursor-pointer">
+                  <span class="text-black font-semibold">{{ post.title }}</span>
+                  by
+                  <span class="text-indigo-500 font-semibold">{{ post.author }}</span>
+                </span>
+          
+                <div class="absolute top-6 left-0 z-10">
+                  <div class="w-[600px] rounded-xl bg-white p-4">
+                    <div class="flex items-start space-x-4">
+                      <img
+                        src="{{ post.image.url }}"
+                        alt="Logo"
+                        class="w-14 h-14 rounded-md object-cover"
+                      />
+                    <div>
+                        <h3 class="text-[25px] text-md font-semibold text-gray-900 hover:cursor-pointer">{{ post.title }}</h3>
+                        <p class="text-sm text-gray-500 mb-1">
+                          {{ post.category|upper }}<span class="font-medium ml-2">♥️ {{ post.likes }}</span>
+                        </p>
+                        <p class="text-sm text-gray-600">{{ post.description }}</p>
+                      </div>
+                    </div>
+                    <div class="mt-4">
+                      <button class="bg-black text-white text-sm px-4 py-1.5 rounded-full hover:bg-gray-800 transition">
+                        Read More
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </a>
+            {% endfor %}
+
+            {% comment %} pagination: {% endcomment %}
+            <div class="flex justify-center mt-10 space-x-4">
+              {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Previous</a>
+              {% endif %}
+            
+              <span class="px-4 py-2 text-gray-700">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            
+              {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300">Next</a>
+              {% endif %}
+            </div>
+          </div>
+
+
+  <!-- Sidebar - fetching all authors: pressing will lead to author's profile page -->
+  <aside class="lg:block w-[100px] flex-shrink-1">
+    
+    <div class="sticky top-20">
+      <h3 class="text-lg font-semibold mb-4">Different Authors:</h3>
+
+        {% for user in users %}
+
+          <div class="mb-6">
+              <a href="{% url 'profile_page' user.id %}">
+                <p class="text-sm font-bold">{{ user.username }}</p>
+                <p class="text-sm text-gray-700">
+                  {{ user.email }}
+                </p>
+              </a>
+          </div>
+        {% endfor %}
+    {% comment %} </a> {% endcomment %}
+  </aside>
+</div>
+
+<script>
+  const tabs = document.querySelectorAll(".tab-item");
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      tabs.forEach((t) => t.classList.remove("active-tab"));
+      tab.classList.add("active-tab");
+    });
+  });
+</script>
+
+<style>
+  .active-tab {
+    color: black;
+    font-weight: 600;
+    position: relative;
+  }
+  .active-tab::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 2px;
+    width: 100%;
+    background-color: black;
+    border-radius: 9999px;
+  }
+</style>
+{% endblock content %}
